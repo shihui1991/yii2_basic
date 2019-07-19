@@ -30,6 +30,23 @@ class ModelBase extends ActiveRecord
     }
 
     /**
+     * 字段信息
+     *
+     * @return array
+     */
+    public function fieldsInfo(){return [];}
+
+    /**
+     * 字段名称
+     *
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return array_column(static::fieldsInfo(),'label','attribute');
+    }
+
+    /**
      * 数值描述
      *
      * @return array
@@ -76,7 +93,20 @@ class ModelBase extends ActiveRecord
     {
         $fields = $this->activeAttributes();
         foreach($fields as $field){
-            $method = 'set'.StrHelper::camel($field);
+            $method = 'setValFor'.StrHelper::camel($field);
+            if(method_exists($this,$method)){
+                $this->$method();
+            }
+        }
+    }
+
+    /**
+     * 字段格式化
+     */
+    public function toJson()
+    {
+        foreach($this->fields() as $field){
+            $method = 'formatValFor'.StrHelper::camel($field);
             if(method_exists($this,$method)){
                 $this->$method();
             }

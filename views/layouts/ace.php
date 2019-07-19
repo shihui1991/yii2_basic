@@ -68,6 +68,7 @@
     <script src="/ace/js/bootstrap.min.js"></script>
 
     <!-- page specific plugin scripts -->
+    <script src="/js/functions-jquery.js"></script>
     <?= isset($this->blocks['pageSpecificJs']) ? $this->blocks['pageSpecificJs'] : '' ?>
 
     <!-- ace scripts -->

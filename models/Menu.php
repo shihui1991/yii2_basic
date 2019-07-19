@@ -33,24 +33,92 @@ class Menu extends ModelBase
     }
 
     /**
-     * {@inheritdoc}
+     * query
+     *
+     * @return \app\queries\MenuQuery|\yii\db\ActiveQuery
      */
-    public function attributeLabels()
+    public static function find()
+    {
+        return new \app\queries\MenuQuery(get_called_class());
+    }
+
+
+    /**
+     * 字段信息
+     *
+     * @return array
+     */
+    public function fieldsInfo()
     {
         return [
-            'id' => 'ID',
-            'parent_id' => '上级ID',
-            'parents_ids' => '所有上级ID集合',
-            'name' => '名称',
-            'uri' => 'URI',
-            'router' => '路由名称',
-            'icon' => '图标',
-            'is_ctrl' => '是否限制',
-            'is_show' => '是否显示',
-            'status' => '状态',
-            'sort' => '排序',
-            'created_at' => '创建时间',
-            'updated_at' => '更新时间',
+            'id' => [
+                'attribute' => 'id',
+                'label' => 'ID',
+                'format' => 'integer',
+            ],
+            'parent_id' => [
+                'attribute' => 'parent_id',
+                'label' => '上级ID',
+                'format' => 'integer',
+            ],
+            'parents_ids' => [
+                'attribute' => 'parents_ids',
+                'label' => '所有上级ID集合',
+                'format' => 'raw',
+            ],
+            'name' => [
+                'attribute' => 'name',
+                'label' => '名称',
+                'format' => 'text',
+            ],
+            'uri' => [
+                'attribute' => 'uri',
+                'label' => 'URI',
+                'format' => 'text',
+            ],
+            'router' => [
+                'attribute' => 'router',
+                'label' => '路由',
+                'format' => 'text',
+            ],
+            'icon' => [
+                'attribute' => 'icon',
+                'label' => '图标',
+                'format' => 'raw',
+            ],
+            'is_ctrl' => [
+                'attribute' => 'is_ctrl',
+                'label' => '是否限制',
+                'format' => 'text',
+                'value' => function($model,$widget){return $model->getValueDesc('is_ctrl',$model->is_ctrl);},
+            ],
+            'is_show' => [
+                'attribute' => 'is_show',
+                'label' => '是否显示',
+                'format' => 'text',
+                'value' => function($model,$widget){return $model->getValueDesc('is_show',$model->is_show);},
+            ],
+            'status' => [
+                'attribute' => 'status',
+                'label' => '状态',
+                'format' => 'text',
+                'value' => function($model,$widget){return $model->getValueDesc('status',$model->status);},
+            ],
+            'sort' => [
+                'attribute' => 'sort',
+                'label' => '排序',
+                'format' => 'integer',
+            ],
+            'created_at' => [
+                'attribute' => 'created_at',
+                'label' => '创建时间',
+                'format' => 'datetime',
+            ],
+            'updated_at' => [
+                'attribute' => 'updated_at',
+                'label' => '更新时间',
+                'format' => 'datetime',
+            ],
         ];
     }
 
@@ -129,11 +197,11 @@ class Menu extends ModelBase
      *
      * @return $this
      */
-    public function setParentsIds()
+    public function setValForParentsIds()
     {
         if($this->parent_id){
             $parent = $this->findOne($this->parent_id);
-            $parentsIds = $parent->getParentsIds();
+            $parentsIds = $parent->formatValForParentsIds();
             $parentsIds[] = $this->parent_id;
             $parentsIds = array_filter($parentsIds);
         }else{
@@ -146,11 +214,11 @@ class Menu extends ModelBase
     }
 
     /**
-     * 处理 parents_ids
+     * 格式化 parents_ids
      *
      * @return array
      */
-    public function getParentsIds()
+    public function formatValForParentsIds()
     {
         $val = $this->parents_ids;
         if(is_string($val)){

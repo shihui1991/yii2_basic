@@ -27,9 +27,11 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin([
             'options' => ['class' => 'form-horizontal']
     ]);
+
+    $parentId = isset($this->params['parent_id']) ? $this->params['parent_id'] : 0;
     ?>
 
-    <?= \app\helpers\DomHelper::getFormField($model, 'parent_id', 'formInput',$parent_id ?? 0 ,['type'=>'number','required'=>'required','min'=>0,'max'=>10**10-1,'step'=>1])?>
+    <?= \app\helpers\DomHelper::getFormField($model, 'parent_id', 'formInput', $parentId, ['type'=>'number','required'=>'required','min'=>0,'max'=>10**10-1,'step'=>1])?>
     <?= \app\helpers\DomHelper::getFormField($model, 'name', 'formInput','' ,['required'=>'required'])?>
     <?= \app\helpers\DomHelper::getFormField($model, 'uri')?>
     <?= \app\helpers\DomHelper::getFormField($model, 'router')?>
