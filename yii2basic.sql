@@ -11,7 +11,7 @@
  Target Server Version : 50717
  File Encoding         : 65001
 
- Date: 18/07/2019 17:38:35
+ Date: 19/07/2019 18:03:03
 */
 
 SET NAMES utf8mb4;
@@ -92,13 +92,14 @@ CREATE TABLE `menu`  (
   `created_at` int(11) UNSIGNED NULL DEFAULT NULL COMMENT '创建时间',
   `updated_at` int(11) UNSIGNED NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '菜单' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '菜单' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of menu
 -- ----------------------------
-INSERT INTO `menu` VALUES (1, 0, '', '控制台', '/admin/home/index', '', '', 0, 1, 1, 0, NULL, 1563437485);
-INSERT INTO `menu` VALUES (2, 1, '1', '系统设置', '', '', '', 1, 1, 1, 0, 1563437519, 1563437691);
+INSERT INTO `menu` VALUES (1, 0, '', '控制台', '/admin/home/index', '', '<i class=\"menu-icon fa fa-tachometer\"></i>', 0, 1, 1, 0, 1563437485, 1563530121);
+INSERT INTO `menu` VALUES (2, 0, '', '系统设置', '', '', '<i class=\"menu-icon fa fa-cogs\"></i>', 1, 1, 1, 0, 1563437519, 1563530147);
+INSERT INTO `menu` VALUES (3, 2, '2', '菜单管理', '/admin/menu/index', '', '<i class=\"menu-icon fa fa-navicon\"></i>', 1, 1, 1, 0, 1563520031, 1563530484);
 
 -- ----------------------------
 -- Table structure for migration

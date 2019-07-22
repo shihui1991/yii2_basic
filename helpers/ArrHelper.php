@@ -62,15 +62,22 @@ class ArrHelper
      * 数值格式化
      *
      * @param array $array
+     * @param bool $isAllNumeric
      * @return array
      */
-    static public function formatNumeric(array $array)
+    static public function formatNumeric(array $array, $isAllNumeric = false)
     {
-        if(empty($array)){
-            return $array;
-        }
         foreach($array as $key => & $val){
-            $val = is_array($val) ? static::formatNumeric($val) : (is_numeric($val) ? (double)$val : $val);
+            if(is_array($val)){
+                $val = static::formatNumeric($val);
+                continue;
+            }
+            if(is_numeric($val)){
+                if( ! $isAllNumeric && strlen($val) > 1 && 0 === strpos($val,'0')){
+                    continue;
+                }
+                $val = (double)$val;
+            }
         }
 
         return $array;

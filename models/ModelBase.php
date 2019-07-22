@@ -101,15 +101,31 @@ class ModelBase extends ActiveRecord
     }
 
     /**
-     * 字段格式化
+     * 属性转化为数组json
      */
     public function toJson()
     {
-        foreach($this->fields() as $field){
+        $fieldsInfo = $this->fieldsInfo();
+        $json = [];
+        foreach($this->attributes as $field => $val){
             $method = 'formatValFor'.StrHelper::camel($field);
             if(method_exists($this,$method)){
-                $this->$method();
+                $val = $this->$method();
+            }else{
+                switch ($fieldsInfo[$field]['jsonFormat']){
+                    case 'int':
+                    case 'float':
+                    case 'double':
+                        $val = (double)$val;
+                        break;
+                    case 'timestamp':
+                        $val = is_numeric($val) ? (int)$val : strtotime($val);
+                        break;
+                }
             }
+            $json[$field] = $val;
         }
+
+        return $json;
     }
 }

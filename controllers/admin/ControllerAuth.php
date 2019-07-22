@@ -11,6 +11,11 @@ use yii\web\NotFoundHttpException;
 class ControllerAuth extends ControllerInit
 {
 
+    public function init()
+    {
+        parent::init();
+    }
+
     /**
      * {@inheritdoc}
      */

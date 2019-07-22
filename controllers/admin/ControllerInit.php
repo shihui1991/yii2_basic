@@ -3,10 +3,9 @@
 
 namespace app\controllers\admin;
 
+use app\controllers\ControllerBase;
 
-use yii\web\Controller;
-
-class ControllerInit extends Controller
+class ControllerInit extends ControllerBase
 {
 
     public $modelClass;

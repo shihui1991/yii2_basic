@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\helpers\ArrHelper;
 use app\helpers\StrHelper;
 use Yii;
 
@@ -55,69 +56,82 @@ class Menu extends ModelBase
                 'attribute' => 'id',
                 'label' => 'ID',
                 'format' => 'integer',
+                'jsonFormat' => 'int',
             ],
             'parent_id' => [
                 'attribute' => 'parent_id',
                 'label' => '上级ID',
                 'format' => 'integer',
+                'jsonFormat' => 'int',
             ],
             'parents_ids' => [
                 'attribute' => 'parents_ids',
                 'label' => '所有上级ID集合',
                 'format' => 'raw',
+                'jsonFormat' => 'array',
             ],
             'name' => [
                 'attribute' => 'name',
                 'label' => '名称',
                 'format' => 'text',
+                'jsonFormat' => 'string',
             ],
             'uri' => [
                 'attribute' => 'uri',
                 'label' => 'URI',
                 'format' => 'text',
+                'jsonFormat' => 'string',
             ],
             'router' => [
                 'attribute' => 'router',
                 'label' => '路由',
                 'format' => 'text',
+                'jsonFormat' => 'string',
             ],
             'icon' => [
                 'attribute' => 'icon',
                 'label' => '图标',
                 'format' => 'raw',
+                'jsonFormat' => 'string',
             ],
             'is_ctrl' => [
                 'attribute' => 'is_ctrl',
                 'label' => '是否限制',
                 'format' => 'text',
+                'jsonFormat' => 'int',
                 'value' => function($model,$widget){return $model->getValueDesc('is_ctrl',$model->is_ctrl);},
             ],
             'is_show' => [
                 'attribute' => 'is_show',
                 'label' => '是否显示',
                 'format' => 'text',
+                'jsonFormat' => 'int',
                 'value' => function($model,$widget){return $model->getValueDesc('is_show',$model->is_show);},
             ],
             'status' => [
                 'attribute' => 'status',
                 'label' => '状态',
                 'format' => 'text',
+                'jsonFormat' => 'int',
                 'value' => function($model,$widget){return $model->getValueDesc('status',$model->status);},
             ],
             'sort' => [
                 'attribute' => 'sort',
                 'label' => '排序',
                 'format' => 'integer',
+                'jsonFormat' => 'int',
             ],
             'created_at' => [
                 'attribute' => 'created_at',
                 'label' => '创建时间',
                 'format' => 'datetime',
+                'jsonFormat' => 'timestamp',
             ],
             'updated_at' => [
                 'attribute' => 'updated_at',
                 'label' => '更新时间',
                 'format' => 'datetime',
+                'jsonFormat' => 'timestamp',
             ],
         ];
     }
@@ -152,8 +166,8 @@ class Menu extends ModelBase
     public function scenarios()
     {
         $scenarios = [
-            static::SCENARIO_ADD => ['parent_id', 'parents_ids', 'name', 'uri', 'router', 'icon', 'is_ctrl', 'is_show', 'status'],
-            static::SCENARIO_EDIT => ['parent_id', 'parents_ids', 'name', 'uri', 'router', 'icon', 'is_ctrl', 'is_show', 'status'],
+            static::SCENARIO_ADD => ['parent_id', 'parents_ids', 'name', 'uri', 'router', 'icon', 'is_ctrl', 'is_show', 'status', 'sort'],
+            static::SCENARIO_EDIT => ['parent_id', 'parents_ids', 'name', 'uri', 'router', 'icon', 'is_ctrl', 'is_show', 'status', 'sort'],
         ];
 
         return array_merge($scenarios, parent::scenarios());
@@ -221,10 +235,11 @@ class Menu extends ModelBase
     public function formatValForParentsIds()
     {
         $val = $this->parents_ids;
-        if(is_string($val)){
+        if($val && is_string($val)){
             $val = explode(',', $val);
         }
+        $val = empty($val) ? [] : ArrHelper::formatNumeric($val,true);
 
-        return  empty($val) ? [] : $val;
+        return  $val;
     }
 }
