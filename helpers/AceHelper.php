@@ -40,7 +40,7 @@ class AceHelper
                 $arrow = '<b class="arrow fa fa-angle-down"></b>';
             }
 
-            $li .= '<li class="'.$liClass.'"><a href="'.$row['url'].'" class="'.$linkClass.'">'.$icon.$name.$arrow.'</a><b class="arrow"></b>'.$children.'</li>';
+            $li .= '<li class="'.$liClass.'"><a href="'.$row['uri'].'" class="'.$linkClass.'">'.$icon.$name.$arrow.'</a><b class="arrow"></b>'.$children.'</li>';
         }
 
         nav:

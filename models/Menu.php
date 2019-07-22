@@ -242,4 +242,12 @@ class Menu extends ModelBase
 
         return  $val;
     }
+
+    /**
+     * @return array|\yii\db\ActiveRecord[]|null
+     */
+    public function getParentsMenus()
+    {
+        return $this->parent_id ? $this->find()->where(['id' => $this->formatValForParentsIds()])->all() : null;
+    }
 }
