@@ -19,7 +19,7 @@ class DomHelper
     static public function getFormField($model, $field, $method = 'formInput', $value = null, $params = [], $others = [])
     {
         $label = $model->getAttributeLabel($field);
-        $value = isset($model->$field) ? $model->$field : $value;
+        $value = property_exists($model, $field) ? $model->$field : $value;
         $valsDesc = isset($params['valsDesc']) ? $params['valsDesc'] : $model->getValueDesc($field);
         unset($params['valsDesc']);
         if( ! isset($params['name'])){
