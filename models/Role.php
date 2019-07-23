@@ -4,42 +4,35 @@ namespace app\models;
 
 use app\helpers\ArrHelper;
 
-
 /**
- * This is the model class for table "menu".
+ * This is the model class for table "role".
  *
  * @property int $id
  * @property int $parent_id 上级ID
  * @property string $parents_ids 所有上级ID集合
  * @property string $name 名称
- * @property string $uri URI
- * @property string $router 路由名称
- * @property string $icon 图标
- * @property int $is_ctrl 是否限制
- * @property int $is_show 是否显示
- * @property int $status 状态
- * @property int $sort 排序
+ * @property string $is_root 是否超管
  * @property int $created_at 创建时间
  * @property int $updated_at 更新时间
  */
-class Menu extends ModelBase
+class Role extends ModelBase
 {
     /**
      * {@inheritdoc}
      */
     static public function tableName()
     {
-        return 'menu';
+        return 'role';
     }
 
     /**
      * query
      *
-     * @return \app\queries\MenuQuery|\yii\db\ActiveQuery
+     * @return \app\queries\RoleQuery|\yii\db\ActiveQuery
      */
     public static function find()
     {
-        return new \app\queries\MenuQuery(get_called_class());
+        return new \app\queries\RoleQuery(get_called_class());
     }
 
 
@@ -75,50 +68,12 @@ class Menu extends ModelBase
                 'format' => 'text',
                 'jsonFormat' => 'string',
             ],
-            'uri' => [
-                'attribute' => 'uri',
-                'label' => 'URI',
-                'format' => 'text',
-                'jsonFormat' => 'string',
-            ],
-            'router' => [
-                'attribute' => 'router',
-                'label' => '路由',
-                'format' => 'text',
-                'jsonFormat' => 'string',
-            ],
-            'icon' => [
-                'attribute' => 'icon',
-                'label' => '图标',
-                'format' => 'raw',
-                'jsonFormat' => 'string',
-            ],
-            'is_ctrl' => [
-                'attribute' => 'is_ctrl',
-                'label' => '是否限制',
+            'is_root' => [
+                'attribute' => 'is_root',
+                'label' => '是否超管',
                 'format' => 'raw',
                 'jsonFormat' => 'int',
-                'value' => function($model,$widget){return $model->getValueDesc('is_ctrl',$model->is_ctrl);},
-            ],
-            'is_show' => [
-                'attribute' => 'is_show',
-                'label' => '是否显示',
-                'format' => 'raw',
-                'jsonFormat' => 'int',
-                'value' => function($model,$widget){return $model->getValueDesc('is_show',$model->is_show);},
-            ],
-            'status' => [
-                'attribute' => 'status',
-                'label' => '状态',
-                'format' => 'raw',
-                'jsonFormat' => 'int',
-                'value' => function($model,$widget){return $model->getValueDesc('status',$model->status);},
-            ],
-            'sort' => [
-                'attribute' => 'sort',
-                'label' => '排序',
-                'format' => 'integer',
-                'jsonFormat' => 'int',
+                'value' => function($model,$widget){return $model->getValueDesc('is_root',$model->is_root);},
             ],
             'created_at' => [
                 'attribute' => 'created_at',
@@ -141,15 +96,13 @@ class Menu extends ModelBase
     public function rules()
     {
         $rules = [
-            [['parent_id', 'name', 'uri', 'router', 'icon', 'is_ctrl', 'is_show', 'status'], 'trim'],
-            [['parent_id', 'is_ctrl', 'is_show', 'status'], 'filter', 'filter' => 'intval'],
-            [['parent_id', 'sort'], 'integer', 'min' => 0, 'max' => 10**10-1],
-            [['name', 'is_ctrl', 'is_show', 'status'], 'required'],
-            [['name', 'uri', 'router', 'icon'], 'string', 'max' => 255],
-            [['uri', 'router'], 'unique'],
-            ['is_ctrl', 'in', 'range' => array_keys(static::getValueDesc('is_ctrl'))],
-            ['is_show', 'in', 'range' => array_keys(static::getValueDesc('is_show'))],
-            ['status', 'in', 'range' => array_keys(static::getValueDesc('status'))],
+            [['parent_id', 'name', 'is_root'], 'trim'],
+            [['parent_id', 'is_root'], 'filter', 'filter' => 'intval'],
+            [['parent_id'], 'integer', 'min' => 0, 'max' => 10**10-1],
+            [['name', 'is_root'], 'required'],
+            [['name'], 'string', 'max' => 255],
+            [['name'], 'unique'],
+            ['is_root', 'in', 'range' => array_keys(static::getValueDesc('is_root'))],
         ];
 
         return array_merge($rules, parent::rules());
@@ -166,22 +119,16 @@ class Menu extends ModelBase
     public function scenarios()
     {
         $scenarios = [
-            static::SCENARIO_ADD => ['parent_id', 'parents_ids', 'name', 'uri', 'router', 'icon', 'is_ctrl', 'is_show', 'status', 'sort'],
-            static::SCENARIO_EDIT => ['parent_id', 'parents_ids', 'name', 'uri', 'router', 'icon', 'is_ctrl', 'is_show', 'status', 'sort'],
+            static::SCENARIO_ADD => ['parent_id', 'parents_ids', 'name', 'is_root'],
+            static::SCENARIO_EDIT => ['parent_id', 'parents_ids', 'name', 'is_root'],
         ];
 
         return array_merge($scenarios, parent::scenarios());
     }
 
-    # is_ctrl
-    const IS_CTRL_NO = 0;
-    const IS_CTRL_YES = 1;
-    # is_show
-    const IS_SHOW_NO = 0;
-    const IS_SHOW_YES = 1;
-    # status
-    const STATUS_OFF = 0;
-    const STATUS_ON = 1;
+    # is_root
+    const IS_ROOT_NO = 0;
+    const IS_ROOT_YES = 1;
 
     /**
      * 数值描述
@@ -191,17 +138,9 @@ class Menu extends ModelBase
     static public function valuesDesc()
     {
         return [
-            'is_ctrl' => [
-                static::IS_CTRL_YES => '限制',
-                static::IS_CTRL_NO => '不限',
-            ],
-            'is_show' => [
-                static::IS_SHOW_NO => '隐藏',
-                static::IS_SHOW_YES => '显示',
-            ],
-            'status' => [
-                static::STATUS_ON => '开启',
-                static::STATUS_OFF => '禁用',
+            'is_root' => [
+                static::IS_ROOT_NO => '否',
+                static::IS_ROOT_YES => '是',
             ],
         ];
     }
@@ -271,5 +210,44 @@ class Menu extends ModelBase
     public function getChildren()
     {
         return $this->hasMany(static::className(),['parent_id' => 'id']);
+    }
+
+    /**
+     * 获取所有授权菜单
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRoleMenus()
+    {
+        return $this->hasMany(RoleMenu::className(),['role_id' => 'id']);
+    }
+
+    /**
+     * 获取所有授权菜单ID列表
+     *
+     * @return array
+     */
+    public function getMenusIds()
+    {
+        if($roleMenus = $this->roleMenus){
+            $menuIds = [];
+            foreach($roleMenus as $row){
+                $menuIds[] = $row->menu_id;
+            }
+            return $menuIds;
+        }
+
+        return [];
+    }
+
+    /**
+     * 获取所有授权菜单列表
+     *
+     * @return \yii\db\ActiveQuery
+     * @throws \yii\base\InvalidConfigException
+     */
+    public function getMenus()
+    {
+        return $this->hasMany(Menu::className(),['id' => 'menu_id'])->viaTable('role_menu',['role_id' => 'id']);
     }
 }

@@ -6,12 +6,12 @@ use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $list  */
 
-$this->title = '菜单列表';
+$this->title = '角色列表';
 
 ?>
 
 <div class="well">
-    <a href="<?= Url::toRoute('create')?>" class="btn btn-success"><i class="ace-icon fa fa-plus"></i>添加顶级菜单</a>
+    <a href="<?= Url::toRoute('create')?>" class="btn btn-success"><i class="ace-icon fa fa-plus"></i>添加顶级角色</a>
     <a class="btn btn-warning" onclick="btnFormAjaxRequest(this)" data-msg="是否确定执行批量排序？" data-form="#batch-action-form" data-url="<?= Url::toRoute('sort') ?>"> 更新排序 </a>
 </div>
 
@@ -21,11 +21,7 @@ $this->title = '菜单列表';
     <tr>
         <th><input type="checkbox" onclick="allCheckOrCancel(this)"> ID</th>
         <th>名称</th>
-        <th>URI</th>
-        <th>是否限制</th>
-        <th>是否显示</th>
-        <th>状态</th>
-        <th>排序</th>
+        <th>是否超管</th>
         <th></th>
     </tr>
     </thead>
@@ -35,9 +31,7 @@ $this->title = '菜单列表';
     $dataList = [];
     foreach($list as $i => $model){
         $dataList[$i] = $model->toArray();
-        $dataList[$i]['is_ctrl'] = $model->getValueDesc('is_ctrl',$model->is_ctrl);
-        $dataList[$i]['is_show'] = $model->getValueDesc('is_show',$model->is_show);
-        $dataList[$i]['status'] = $model->getValueDesc('status',$model->status);
+        $dataList[$i]['is_root'] = $model->getValueDesc('is_root',$model->is_root);
         $dataList[$i]['url_create'] = Url::toRoute(['create','parent_id' => $model->id]);
         $dataList[$i]['url_view'] = Url::toRoute(['view','id' => $model->id]);
         $dataList[$i]['url_update'] = Url::toRoute(['update','id' => $model->id]);
@@ -46,15 +40,8 @@ $this->title = '菜单列表';
     $tpl = "
  <tr data-tt-id='\$id' data-tt-parent-id='\$parent_id'>
      <td><input type='checkbox' name='ids[]' value='\$id'> \$id</td>
-     <td>\$space \$icon \$name</td>
-     <td>\$uri</td>
-     <td>\$is_ctrl</td>
-     <td>\$is_show</td>
-     <td>\$status</td>
-     <td>
-         <p contenteditable='true' class='p-sort'>\$sort</p>
-         <input type='hidden' class='input-sort' name='sorts[\$id]' value='\$sort'>
-     </td>
+     <td>\$space \$name</td>
+     <td>\$is_root</td>
      <td>
          <div class='btn-group'>
              <a href='\$url_create' class='btn btn-xs btn-success'><i class='ace-icon fa fa-plus'></i>添加下级</a>
@@ -77,7 +64,7 @@ $this->title = '菜单列表';
 
 <?php $this->beginBlock('inlineCss')?>
 <style>
-    .p-sort{height:100%}
+
 </style>
 <?php $this->endBlock()?>
 
@@ -86,16 +73,6 @@ $this->title = '菜单列表';
 
 <?php $this->beginBlock('inlineJs')?>
 <script>
-    $(".p-sort").on("change blur",function(){
-        var sort = $(this).text();
-        var input = $(this).next("input.input-sort");
-        var origin = input.val();
-        if(! (sort > -1)){
-            alert("输入排序数值非法");
-            $(this).text(origin);
-            return false;
-        }
-        input.val(parseInt(sort));
-    });
+
 </script>
 <?php $this->endBlock()?>

@@ -3,6 +3,7 @@
 namespace app\models;
 
 
+use app\helpers\MysqlHelper;
 use app\helpers\StrHelper;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -127,5 +128,26 @@ class ModelBase extends ActiveRecord
         }
 
         return $json;
+    }
+
+    /**
+     * 批量插入或更新
+     *
+     * @param array $list
+     * @param array $updateFields
+     * @param array $incrFields
+     * @param array $insertFields
+     * @return int
+     * @throws \yii\db\Exception
+     */
+    public function batchInsertOrUpdate(array $list, array $updateFields = array(), array $incrFields = array(), array $insertFields = array())
+    {
+        $sqls = MysqlHelper::batchInsertOrUpdateSqls($this->tableName(),$list,$updateFields,$incrFields,$insertFields);
+        $db = $this->getDB();
+        foreach($sqls as $sql){
+            $res = $db->createCommand($sql)->execute();
+        }
+
+        return $res;
     }
 }

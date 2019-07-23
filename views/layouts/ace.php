@@ -76,6 +76,13 @@
     <script src="/ace/js/ace.min.js"></script>
 
     <!-- inline scripts related to this page -->
+    <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    </script>
     <?= isset($this->blocks['inlineJs']) ? $this->blocks['inlineJs'] : '' ?>
 
     <?php $this->endBody() ?>

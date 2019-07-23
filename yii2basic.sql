@@ -11,7 +11,7 @@
  Target Server Version : 50717
  File Encoding         : 65001
 
- Date: 19/07/2019 18:03:03
+ Date: 23/07/2019 17:41:13
 */
 
 SET NAMES utf8mb4;
@@ -92,14 +92,23 @@ CREATE TABLE `menu`  (
   `created_at` int(11) UNSIGNED NULL DEFAULT NULL COMMENT '创建时间',
   `updated_at` int(11) UNSIGNED NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '菜单' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '菜单' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of menu
 -- ----------------------------
-INSERT INTO `menu` VALUES (1, 0, '', '控制台', '/admin/home/index', '', '<i class=\"menu-icon fa fa-tachometer\"></i>', 0, 1, 1, 0, 1563437485, 1563530121);
-INSERT INTO `menu` VALUES (2, 0, '', '系统设置', '', '', '<i class=\"menu-icon fa fa-cogs\"></i>', 1, 1, 1, 0, 1563437519, 1563530147);
-INSERT INTO `menu` VALUES (3, 2, '2', '菜单管理', '/admin/menu/index', '', '<i class=\"menu-icon fa fa-navicon\"></i>', 1, 1, 1, 0, 1563520031, 1563530484);
+INSERT INTO `menu` VALUES (1, 0, '', '控制台', '/admin/home/index', '', '<i class=\"menu-icon fa fa-tachometer\"></i>', 0, 1, 1, 0, 1563437485, 1563776501);
+INSERT INTO `menu` VALUES (2, 0, '', '系统设置', '', '', '<i class=\"menu-icon fa fa-cogs\"></i>', 1, 1, 1, 0, 1563437519, 1563776484);
+INSERT INTO `menu` VALUES (3, 2, '2', '菜单管理', '/admin/menu/index', '', '<i class=\"menu-icon fa fa-navicon\"></i>', 1, 1, 1, 0, 1563520031, 1563854415);
+INSERT INTO `menu` VALUES (4, 3, '2,3', '添加菜单', '/admin/menu/create', '', '<i class=\"menu-icon fa fa-plus-circle\"></i>', 1, 0, 1, 0, 1563787613, 1563787746);
+INSERT INTO `menu` VALUES (5, 3, '2,3', '菜单详情', '/admin/menu/view', '', '<i class=\"menu-icon fa fa-edit\"></i>', 1, 0, 1, 0, 1563787653, 1563787757);
+INSERT INTO `menu` VALUES (6, 3, '2,3', '修改菜单', '/admin/menu/update', '', '<i class=\"menu-icon fa fa-info-circle\"></i>', 1, 0, 1, 0, 1563787682, 1563787772);
+INSERT INTO `menu` VALUES (7, 3, '2,3', '删除菜单', '/admin/menu/delete', '', '<i class=\"menu-icon fa fa-trash\"></i>', 1, 0, 1, 0, 1563787701, 1563787784);
+INSERT INTO `menu` VALUES (8, 2, '2', '角色管理', '/admin/role/index', '', '<i class=\"menu-icon fa fa-user-secret\"></i>', 1, 1, 1, 0, 1563844799, 1563844799);
+INSERT INTO `menu` VALUES (9, 8, '2,8', '添加角色', '/admin/role/create', '', '<i class=\"menu-icon fa fa-plus-circle\"></i>', 1, 0, 1, 0, 1563844822, 1563844822);
+INSERT INTO `menu` VALUES (10, 8, '2,8', '角色详情', '/admin/role/view', '', '<i class=\"menu-icon fa fa-info-circle\"></i>', 1, 0, 1, 0, 1563844848, 1563844848);
+INSERT INTO `menu` VALUES (11, 8, '2,8', '修改角色', '/admin/role/update', '', '<i class=\"menu-icon fa fa-edit\"></i>', 1, 0, 1, 0, 1563844882, 1563844882);
+INSERT INTO `menu` VALUES (12, 8, '2,8', '删除角色', '/admin/role/delete', '', '<i class=\"menu-icon fa fa-trash\"></i>', 1, 0, 1, 0, 1563844913, 1563844913);
 
 -- ----------------------------
 -- Table structure for migration

@@ -3,7 +3,8 @@
 /* @var $content string */
 
 $this->params['bodyClass'] = 'no-skin';
-?>
+
+use app\widgets\Alert; ?>
 
 <?php $this->beginContent('@app/views/layouts/ace.php') ?>
 
@@ -408,6 +409,7 @@ $this->params['bodyClass'] = 'no-skin';
                     <div class="col-xs-12">
                         <!-- PAGE CONTENT BEGINS -->
 
+                        <?= Alert::widget() ?>
                         <?= $content ?>
 
                         <!-- PAGE CONTENT ENDS -->

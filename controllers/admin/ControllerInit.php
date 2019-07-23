@@ -22,7 +22,7 @@ class ControllerInit extends ControllerBase
 
         $menu = Menu::findOne(['uri' => $uri]);
         $this->view->params['curMenu'] = $menu;
-        $this->view->params['breadcrumb'] = $menu->getParentsMenus();
+        $this->view->params['breadcrumb'] = $menu->getParents();
 
         $this->getNav($menu);
     }

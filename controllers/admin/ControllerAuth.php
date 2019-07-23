@@ -4,8 +4,8 @@
 namespace app\controllers\admin;
 
 use Yii;
-use yii\data\ActiveDataProvider;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 class ControllerAuth extends ControllerInit
@@ -25,7 +25,7 @@ class ControllerAuth extends ControllerInit
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['DELETE'],
+                    'delete' => ['DELETE','POST'],
                 ],
             ],
         ];
@@ -38,12 +38,10 @@ class ControllerAuth extends ControllerInit
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => $this->modelClass::find(),
-        ]);
+        $list = $this->modelClass::find()->all();
 
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+            'list' => $list,
         ]);
     }
 
@@ -72,9 +70,10 @@ class ControllerAuth extends ControllerInit
 
         if(Yii::$app->request->isPost){
             if ($model->modify($model::SCENARIO_ADD)) {
+                Yii::$app->session->addFlash('success', '保存成功');
                 return $this->redirect(['view', 'id' => $model->id]);
             }else{
-                Yii::$app->session->addFlash('errors', '保存失败');
+                Yii::$app->session->addFlash('error', '保存失败');
             }
         }
 
@@ -96,9 +95,10 @@ class ControllerAuth extends ControllerInit
 
         if(Yii::$app->request->isPost){
             if ($model->modify($model::SCENARIO_EDIT)) {
+                Yii::$app->session->addFlash('success', '保存成功');
                 return $this->redirect(['view', 'id' => $model->id]);
             }else{
-                Yii::$app->session->addFlash('errors', '保存失败');
+                Yii::$app->session->addFlash('error', '保存失败');
             }
         }
 
@@ -116,9 +116,21 @@ class ControllerAuth extends ControllerInit
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $res = $this->findModel($id)->delete();
+        if($res){
+            $resp = [
+                'code' => 0,
+                'msg' => '操作成功',
+                'url' => Url::toRoute('index'),
+            ];
+        }else{
+            $resp = [
+                'code' => 1,
+                'msg' => '操作失败',
+            ];
+        }
 
-        return $this->redirect(['index']);
+        return json_encode($resp,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
     }
 
     /**
