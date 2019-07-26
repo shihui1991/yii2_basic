@@ -2,9 +2,13 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-$this->params['bodyClass'] = 'no-skin';
+use app\widgets\Alert;
+use yii\helpers\Url;
 
-use app\widgets\Alert; ?>
+$this->params['bodyClass'] = 'no-skin';
+$session = Yii::$app->session->get('master');
+$master = $session['master'];
+?>
 
 <?php $this->beginContent('@app/views/layouts/ace.php') ?>
 
@@ -14,14 +18,14 @@ use app\widgets\Alert; ?>
             <a href="index.html" class="navbar-brand">
                 <small>
                     <i class="fa fa-leaf"></i>
-                    Ace Admin
+                    后台管理
                 </small>
             </a>
 
             <button class="pull-right navbar-toggle navbar-toggle-img collapsed" type="button" data-toggle="collapse" data-target=".navbar-buttons">
                 <span class="sr-only">Toggle user menu</span>
 
-                <img src="/ace/images/avatars/user.jpg" alt="Jason's Photo" />
+                <img src="/ace/images/avatars/avatar5.png" alt="" />
             </button>
 
             <button class="pull-right navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#sidebar">
@@ -294,11 +298,8 @@ use app\widgets\Alert; ?>
 
                 <li class="light-blue dropdown-modal">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
-                        <img class="nav-user-photo" src="/ace/images/avatars/user.jpg" alt="Jason's Photo" />
-                        <span class="user-info">
-									<small>Welcome,</small>
-									Jason
-								</span>
+                        <img class="nav-user-photo" src="/ace/images/avatars/avatar5.png" alt="" />
+                        <span class="user-info"><?= $master->name ?></span>
 
                         <i class="ace-icon fa fa-caret-down"></i>
                     </a>
@@ -312,18 +313,18 @@ use app\widgets\Alert; ?>
                         </li>
 
                         <li>
-                            <a href="profile.html">
+                            <a href="<?= Url::toRoute(['admin/home/profile'])?> ">
                                 <i class="ace-icon fa fa-user"></i>
-                                Profile
+                                个人信息
                             </a>
                         </li>
 
                         <li class="divider"></li>
 
                         <li>
-                            <a href="#">
+                            <a href="<?= Url::toRoute(['admin/login/logout'])?>">
                                 <i class="ace-icon fa fa-power-off"></i>
-                                Logout
+                                退出
                             </a>
                         </li>
                     </ul>
@@ -385,10 +386,10 @@ use app\widgets\Alert; ?>
             <div class="breadcrumbs ace-save-state" id="breadcrumbs">
                 <ul class="breadcrumb">
                     <li>
-                        <i class="ace-icon fa fa-home home-icon"></i>
-                        <a href="/admin/home/index">控制台</a>
+                        <a href="/admin/home/index"><i class="ace-icon fa fa-home home-icon"></i></a>
                     </li>
 
+                    <?php if( !empty($this->params['breadcrumb'])): ?>
                     <?php foreach($this->params['breadcrumb'] as $menu): ?>
                         <?php if($menu->uri): ?>
                             <li><a href="<?= $menu->uri ?>"><?= $menu->name ?></a></li>
@@ -397,6 +398,7 @@ use app\widgets\Alert; ?>
                         <?php endif; ?>
 
                     <?php endforeach; ?>
+                    <?php endif; ?>
 
                     <li class="active"><?= $this->params['curMenu']->name ?></li>
                 </ul><!-- /.breadcrumb -->

@@ -8,10 +8,8 @@ use app\models\Menu;
 /**
  * MenuController implements the CRUD actions for Menu model.
  */
-class MenuController extends ControllerAuth
+class MenuController extends ControllerCommon
 {
-    public $layout = 'ace-main';
-
     public $modelClass = Menu::class;
 
     /**

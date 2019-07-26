@@ -11,7 +11,7 @@
  Target Server Version : 50717
  File Encoding         : 65001
 
- Date: 23/07/2019 17:41:13
+ Date: 25/07/2019 17:39:10
 */
 
 SET NAMES utf8mb4;
@@ -74,6 +74,42 @@ CREATE TABLE `auth_rule`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Table structure for master
+-- ----------------------------
+DROP TABLE IF EXISTS `master`;
+CREATE TABLE `master`  (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '姓名',
+  `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
+  `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '密码',
+  `status` tinyint(1) UNSIGNED NOT NULL COMMENT '状态',
+  `created_at` int(11) UNSIGNED NULL DEFAULT NULL COMMENT '创建时间',
+  `updated_at` int(11) UNSIGNED NULL DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE INDEX `username`(`username`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of master
+-- ----------------------------
+INSERT INTO `master` VALUES (1, '罗仕辉', 'luoshihui', '$2y$10$ZNX5vlHTEyu/2XM4CYkFkOWmFqduc/bHjEPBB3AgQfGlQvqN6U0lK', 1, 1563956838, 1563957090);
+
+-- ----------------------------
+-- Table structure for master_role
+-- ----------------------------
+DROP TABLE IF EXISTS `master_role`;
+CREATE TABLE `master_role`  (
+  `master_id` int(11) UNSIGNED NOT NULL COMMENT '用户ID',
+  `role_id` int(11) UNSIGNED NOT NULL COMMENT '角色ID',
+  UNIQUE INDEX `masterId_roleId_unique`(`master_id`, `role_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户角色' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of master_role
+-- ----------------------------
+INSERT INTO `master_role` VALUES (1, 8);
+
+-- ----------------------------
 -- Table structure for menu
 -- ----------------------------
 DROP TABLE IF EXISTS `menu`;
@@ -92,7 +128,7 @@ CREATE TABLE `menu`  (
   `created_at` int(11) UNSIGNED NULL DEFAULT NULL COMMENT '创建时间',
   `updated_at` int(11) UNSIGNED NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '菜单' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '菜单' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of menu
@@ -109,6 +145,12 @@ INSERT INTO `menu` VALUES (9, 8, '2,8', '添加角色', '/admin/role/create', ''
 INSERT INTO `menu` VALUES (10, 8, '2,8', '角色详情', '/admin/role/view', '', '<i class=\"menu-icon fa fa-info-circle\"></i>', 1, 0, 1, 0, 1563844848, 1563844848);
 INSERT INTO `menu` VALUES (11, 8, '2,8', '修改角色', '/admin/role/update', '', '<i class=\"menu-icon fa fa-edit\"></i>', 1, 0, 1, 0, 1563844882, 1563844882);
 INSERT INTO `menu` VALUES (12, 8, '2,8', '删除角色', '/admin/role/delete', '', '<i class=\"menu-icon fa fa-trash\"></i>', 1, 0, 1, 0, 1563844913, 1563844913);
+INSERT INTO `menu` VALUES (13, 2, '2', '管理员', '/admin/master/index', '', '<i class=\"menu-icon fa fa-users\"></i>', 1, 1, 1, 0, 1563940491, 1563940528);
+INSERT INTO `menu` VALUES (14, 13, '2,13', '添加用户', '/admin/master/create', '', '<i class=\"menu-icon fa fa-plus-circle\"></i>', 1, 0, 1, 0, 1563946886, 1563946886);
+INSERT INTO `menu` VALUES (15, 13, '2,13', '用户详情', '/admin/master/view', '', '<i class=\"menu-icon fa fa-info-circle\"></i>', 1, 0, 1, 0, 1563946925, 1563946925);
+INSERT INTO `menu` VALUES (16, 13, '2,13', '修改用户', '/admin/master/update', '', '<i class=\"menu-icon fa fa-edit\"></i>', 1, 0, 1, 0, 1563946949, 1563946980);
+INSERT INTO `menu` VALUES (17, 13, '2,13', '删除用户', '/admin/master/delete', '', '<i class=\"menu-icon fa fa-trash\"></i>', 1, 0, 1, 0, 1563946968, 1563946968);
+INSERT INTO `menu` VALUES (18, 1, '1', '个人信息', '/admin/home/profile', '', '<i class=\"menu-icon fa fa-user\"></i>', 0, 0, 1, 0, 1564042375, 1564042375);
 
 -- ----------------------------
 -- Table structure for migration
@@ -147,7 +189,12 @@ CREATE TABLE `role`  (
   `updated_at` int(11) UNSIGNED NULL DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `name`(`name`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of role
+-- ----------------------------
+INSERT INTO `role` VALUES (8, 0, '', '开发者', 1, 1563930445, 1563930445);
 
 -- ----------------------------
 -- Table structure for role_menu
@@ -158,31 +205,5 @@ CREATE TABLE `role_menu`  (
   `menu_id` int(11) UNSIGNED NOT NULL COMMENT '菜单ID',
   UNIQUE INDEX `roleId_menuId_unique`(`role_id`, `menu_id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '角色授权菜单' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Table structure for user
--- ----------------------------
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user`  (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '姓名',
-  `username` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名',
-  `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '密码',
-  `status` tinyint(1) UNSIGNED NOT NULL COMMENT '状态',
-  `created_at` int(11) UNSIGNED NULL DEFAULT NULL COMMENT '创建时间',
-  `updated_at` int(11) UNSIGNED NULL DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`id`) USING BTREE,
-  UNIQUE INDEX `username`(`username`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Table structure for user_role
--- ----------------------------
-DROP TABLE IF EXISTS `user_role`;
-CREATE TABLE `user_role`  (
-  `user_id` int(11) UNSIGNED NOT NULL COMMENT '用户ID',
-  `role_id` int(11) UNSIGNED NOT NULL COMMENT '角色ID',
-  UNIQUE INDEX `userId_roleId_unique`(`user_id`, `role_id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户角色' ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

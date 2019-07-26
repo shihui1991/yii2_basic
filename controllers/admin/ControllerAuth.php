@@ -3,149 +3,58 @@
 
 namespace app\controllers\admin;
 
-use Yii;
-use yii\filters\VerbFilter;
-use yii\helpers\Url;
+use app\helpers\AceHelper;
+use app\models\Menu;
 use yii\web\NotFoundHttpException;
+use yii\web\UnauthorizedHttpException;
 
 class ControllerAuth extends ControllerInit
 {
 
-    public function init()
+    public function beforeAction($action)
     {
-        parent::init();
-    }
+        $res = parent::beforeAction($action);
 
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['DELETE','POST'],
-                ],
-            ],
-        ];
-    }
+        $uri = '/'.\Yii::$app->request->getPathInfo();
 
-    /**
-     * 列表
-     *
-     * @return string
-     */
-    public function actionIndex()
-    {
-        $list = $this->modelClass::find()->all();
-
-        return $this->render('index', [
-            'list' => $list,
-        ]);
-    }
-
-    /**
-     * 详情
-     *
-     * @param $id
-     * @return string
-     * @throws NotFoundHttpException
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
-     * 添加
-     *
-     * @return string|\yii\web\Response
-     */
-    public function actionCreate()
-    {
-        $model = $this->modelClass::instance();
-
-        if(Yii::$app->request->isPost){
-            if ($model->modify($model::SCENARIO_ADD)) {
-                Yii::$app->session->addFlash('success', '保存成功');
-                return $this->redirect(['view', 'id' => $model->id]);
-            }else{
-                Yii::$app->session->addFlash('error', '保存失败');
-            }
+        $menu = Menu::findOne(['uri' => $uri]);
+        if( !$menu){
+            throw new NotFoundHttpException('无法访问');
         }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+        $session = \Yii::$app->session->get('master');
+        if( ! $session){
+            $this->redirect('/admin/login/index')->send();
+            return false;
+        }
+        if(Menu::IS_CTRL_YES == $menu->is_ctrl
+            && !$session['isRoot']
+            && !in_array($menu->id,$session['menuIds'])
+        ){
+            throw new UnauthorizedHttpException('无访问权限');
+        }
+
+        $this->view->params['curMenu'] = $menu;
+        $this->view->params['breadcrumb'] = $menu->getParents();
+
+        $this->getNav($menu);
+
+        return true & $res;
     }
 
     /**
-     * 修改
+     * 获取导航
      *
-     * @param $id
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException
+     * @param $curMenu
      */
-    public function actionUpdate($id)
+    protected function getNav($curMenu)
     {
-        $model = $this->findModel($id);
-
-        if(Yii::$app->request->isPost){
-            if ($model->modify($model::SCENARIO_EDIT)) {
-                Yii::$app->session->addFlash('success', '保存成功');
-                return $this->redirect(['view', 'id' => $model->id]);
-            }else{
-                Yii::$app->session->addFlash('error', '保存失败');
-            }
+        $menus = Menu::find()->isShow()->orderBySort()->all();
+        $list = [];
+        foreach($menus as $menu){
+            $list[] = $menu->toArray();
         }
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * 删除
-     *
-     * @param $id
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException
-     */
-    public function actionDelete($id)
-    {
-        $res = $this->findModel($id)->delete();
-        if($res){
-            $resp = [
-                'code' => 0,
-                'msg' => '操作成功',
-                'url' => Url::toRoute('index'),
-            ];
-        }else{
-            $resp = [
-                'code' => 1,
-                'msg' => '操作失败',
-            ];
-        }
-
-        return json_encode($resp,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
-    }
-
-    /**
-     * 获取模型
-     *
-     * @param $id
-     * @return mixed
-     * @throws NotFoundHttpException
-     */
-    protected function findModel($id)
-    {
-        if (($model = $this->modelClass::findOne($id)) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
+        $this->view->params['navList'] = AceHelper::makeNav($list,0,1,$curMenu->id,$curMenu->formatValForParentsIds());
     }
 }

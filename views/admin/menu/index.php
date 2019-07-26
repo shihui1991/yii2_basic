@@ -16,7 +16,7 @@ $this->title = '菜单列表';
 </div>
 
 <form action="" id="batch-action-form" method="post">
-<table class="table table-hover table-bordered">
+<table class="table table-hover table-bordered treetable">
     <thead>
     <tr>
         <th><input type="checkbox" onclick="allCheckOrCancel(this)"> ID</th>
@@ -46,7 +46,7 @@ $this->title = '菜单列表';
     $tpl = "
  <tr data-tt-id='\$id' data-tt-parent-id='\$parent_id'>
      <td><input type='checkbox' name='ids[]' value='\$id'> \$id</td>
-     <td>\$space \$icon \$name</td>
+     <td>\$icon \$name</td>
      <td>\$uri</td>
      <td>\$is_ctrl</td>
      <td>\$is_show</td>
@@ -73,6 +73,7 @@ $this->title = '菜单列表';
 </form>
 
 <?php $this->beginBlock('pageSpecificCss')?>
+<link rel="stylesheet" href="/treetable/treetable.min.css">
 <?php $this->endBlock()?>
 
 <?php $this->beginBlock('inlineCss')?>
@@ -82,10 +83,14 @@ $this->title = '菜单列表';
 <?php $this->endBlock()?>
 
 <?php $this->beginBlock('pageSpecificJs')?>
+<script src="/treetable/jquery.treetable.min.js"></script>
+<script src="/js/functions-treetable.js"></script>
 <?php $this->endBlock()?>
 
 <?php $this->beginBlock('inlineJs')?>
 <script>
+    makeTreeTable($(".treetable"),{column:1});
+
     $(".p-sort").on("change blur",function(){
         var sort = $(this).text();
         var input = $(this).next("input.input-sort");

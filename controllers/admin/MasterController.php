@@ -2,17 +2,17 @@
 
 namespace app\controllers\admin;
 
-use app\models\RoleMenu;
+use app\models\MasterRole;
 use Yii;
-use app\models\Role;
+use app\models\Master;
 use yii\web\NotFoundHttpException;
 
 /**
- * RoleController implements the CRUD actions for Role model.
+ * MasterController implements the CRUD actions for Master model.
  */
-class RoleController extends ControllerCommon
+class MasterController extends ControllerCommon
 {
-    public $modelClass = Role::class;
+    public $modelClass = Master::class;
 
 
     /**
@@ -27,15 +27,11 @@ class RoleController extends ControllerCommon
 
         if(Yii::$app->request->isPost){
             if ($model->modify($model::SCENARIO_ADD)) {
-                # 添加授权菜单
-                if($model::IS_ROOT_YES == $model->is_root){
-                    goto end;
+                # 添加角色
+                $roleIds = Yii::$app->request->post('role_ids');
+                if($roleIds){
+                    MasterRole::instance()->batchCreate($model->id,$roleIds);
                 }
-                $menuIds = Yii::$app->request->post('menu_ids');
-                if($menuIds){
-                    RoleMenu::instance()->batchCreate($model->id,$menuIds);
-                }
-                end:
                 Yii::$app->session->addFlash('success', '保存成功');
                 return $this->redirect(['index']);
             }else{
@@ -61,16 +57,12 @@ class RoleController extends ControllerCommon
 
         if(Yii::$app->request->isPost){
             if ($model->modify($model::SCENARIO_EDIT)) {
-                # 添加授权菜单
-                RoleMenu::deleteAll(['role_id' => $model->id]);
-                if($model::IS_ROOT_YES == $model->is_root){
-                    goto end;
+                # 添加角色
+                MasterRole::deleteAll(['master_id' => $model->id]);
+                $roleIds = Yii::$app->request->post('role_ids');
+                if($roleIds){
+                    MasterRole::instance()->batchCreate($model->id,$roleIds);
                 }
-                $menuIds = Yii::$app->request->post('menu_ids');
-                if($menuIds){
-                    RoleMenu::instance()->batchCreate($model->id,$menuIds);
-                }
-                end:
                 Yii::$app->session->addFlash('success', '保存成功');
                 return $this->redirect(['view', 'id' => $model->id]);
             }else{

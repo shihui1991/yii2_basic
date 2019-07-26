@@ -74,6 +74,18 @@ class ModelBase extends ActiveRecord
     }
 
     /**
+     * 获取字段
+     *
+     * @param $scenario
+     * @return array
+     */
+    public function getFields($scenario)
+    {
+        $conf = $this->scenarios();
+        return isset($conf[$scenario]) ? $conf[$scenario] : array_keys(static::fieldsInfo());
+    }
+
+    /**
      * 保存编辑
      *
      * @param $scenario

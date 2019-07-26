@@ -11,7 +11,7 @@ use app\helpers\ArrHelper;
  * @property int $parent_id 上级ID
  * @property string $parents_ids 所有上级ID集合
  * @property string $name 名称
- * @property string $is_root 是否超管
+ * @property int $is_root 是否超管
  * @property int $created_at 创建时间
  * @property int $updated_at 更新时间
  */

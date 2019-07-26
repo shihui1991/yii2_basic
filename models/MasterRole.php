@@ -5,29 +5,29 @@ namespace app\models;
 use app\helpers\ArrHelper;
 
 /**
- * This is the model class for table "role".
+ * This is the model class for table "MasterRole".
  *
  * @property int $role_id
- * @property int $menu_id
+ * @property int $master_id
  */
-class RoleMenu extends ModelBase
+class MasterRole extends ModelBase
 {
     /**
      * {@inheritdoc}
      */
     static public function tableName()
     {
-        return 'role_menu';
+        return 'master_role';
     }
 
     /**
      * query
      *
-     * @return \app\queries\RoleMenuQuery|\yii\db\ActiveQuery
+     * @return \app\queries\MasterRoleQuery|\yii\db\ActiveQuery
      */
     public static function find()
     {
-        return new \app\queries\RoleMenuQuery(get_called_class());
+        return new \app\queries\MasterRoleQuery(get_called_class());
     }
 
 
@@ -39,15 +39,15 @@ class RoleMenu extends ModelBase
     public function fieldsInfo()
     {
         return [
-            'role_id' => [
-                'attribute' => 'role_id',
-                'label' => '角色ID',
+            'master_id' => [
+                'attribute' => 'master_id',
+                'label' => '用户ID',
                 'format' => 'integer',
                 'jsonFormat' => 'int',
             ],
-            'menu_id' => [
-                'attribute' => 'menu_id',
-                'label' => '菜单ID',
+            'role_id' => [
+                'attribute' => 'role_id',
+                'label' => '角色ID',
                 'format' => 'integer',
                 'jsonFormat' => 'int',
             ],
@@ -60,11 +60,11 @@ class RoleMenu extends ModelBase
     public function rules()
     {
         $rules = [
-            [['role_id', 'menu_id'], 'trim'],
-            [['role_id', 'menu_id'], 'filter', 'filter' => 'intval'],
-            [['role_id', 'menu_id'], 'integer', 'min' => 0, 'max' => 10**10-1],
-            [['role_id', 'menu_id'], 'required'],
-            [['role_id', 'menu_id'], 'unique', 'targetAttribute' => ['role_id', 'menu_id']],
+            [['role_id', 'master_id'], 'trim'],
+            [['role_id', 'master_id'], 'filter', 'filter' => 'intval'],
+            [['role_id', 'master_id'], 'integer', 'min' => 0, 'max' => 10**10-1],
+            [['role_id', 'master_id'], 'required'],
+            [['role_id', 'master_id'], 'unique', 'targetAttribute' => ['role_id', 'master_id']],
         ];
 
         return array_merge($rules, parent::rules());
@@ -80,7 +80,7 @@ class RoleMenu extends ModelBase
     public function scenarios()
     {
         $scenarios = [
-            static::SCENARIO_ADD => ['role_id', 'menu_id'],
+            static::SCENARIO_ADD => ['role_id', 'master_id'],
         ];
 
         return array_merge($scenarios, parent::scenarios());
@@ -89,18 +89,18 @@ class RoleMenu extends ModelBase
     /**
      * 批量创建
      *
-     * @param $roleId
-     * @param $menuIds
+     * @param $masterId
+     * @param $roleIds
      * @return int
      * @throws \yii\db\Exception
      */
-    public function batchCreate($roleId, $menuIds)
+    public function batchCreate($masterId, $roleIds)
     {
         $list = [];
-        foreach($menuIds as $menuId){
+        foreach($roleIds as $roleId){
             $list[] = [
+                'master_id' => $masterId,
                 'role_id' => $roleId,
-                'menu_id' => $menuId,
             ];
         }
         return $this->batchInsertOrUpdate($list);

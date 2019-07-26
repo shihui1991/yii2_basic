@@ -3,11 +3,11 @@
 use yii\db\Migration;
 
 /**
- * Handles the creation of table `{{%user}}`.
+ * Handles the creation of table `{{%master}}`.
  */
-class m190711_030303_create_user_table extends Migration
+class m190711_030303_create_master_table extends Migration
 {
-    protected $table = '{{%user}}';
+    protected $table = '{{%master}}';
 
     /**
      * {@inheritdoc}

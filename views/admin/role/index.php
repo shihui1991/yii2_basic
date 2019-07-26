@@ -12,11 +12,10 @@ $this->title = '角色列表';
 
 <div class="well">
     <a href="<?= Url::toRoute('create')?>" class="btn btn-success"><i class="ace-icon fa fa-plus"></i>添加顶级角色</a>
-    <a class="btn btn-warning" onclick="btnFormAjaxRequest(this)" data-msg="是否确定执行批量排序？" data-form="#batch-action-form" data-url="<?= Url::toRoute('sort') ?>"> 更新排序 </a>
 </div>
 
 <form action="" id="batch-action-form" method="post">
-<table class="table table-hover table-bordered">
+<table class="table table-hover table-bordered treetable">
     <thead>
     <tr>
         <th><input type="checkbox" onclick="allCheckOrCancel(this)"> ID</th>
@@ -40,7 +39,7 @@ $this->title = '角色列表';
     $tpl = "
  <tr data-tt-id='\$id' data-tt-parent-id='\$parent_id'>
      <td><input type='checkbox' name='ids[]' value='\$id'> \$id</td>
-     <td>\$space \$name</td>
+     <td>\$name</td>
      <td>\$is_root</td>
      <td>
          <div class='btn-group'>
@@ -60,19 +59,21 @@ $this->title = '角色列表';
 </form>
 
 <?php $this->beginBlock('pageSpecificCss')?>
+<link rel="stylesheet" href="/treetable/treetable.min.css">
 <?php $this->endBlock()?>
 
 <?php $this->beginBlock('inlineCss')?>
 <style>
-
 </style>
 <?php $this->endBlock()?>
 
 <?php $this->beginBlock('pageSpecificJs')?>
+<script src="/treetable/jquery.treetable.min.js"></script>
+<script src="/js/functions-treetable.js"></script>
 <?php $this->endBlock()?>
 
 <?php $this->beginBlock('inlineJs')?>
 <script>
-
+    makeTreeTable($(".treetable"),{column:1,initialState:"expanded"});
 </script>
 <?php $this->endBlock()?>
